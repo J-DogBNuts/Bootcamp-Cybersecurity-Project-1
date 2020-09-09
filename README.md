@@ -94,62 +94,59 @@ SSH into the control node and follow the steps below:
 - Update the host.yml file to include [elk] 10.2.0.4 ansible_python_interpreter=/usr/bin/python3
 - Run the playbook, and navigate to http://168.61.68.246:5601/app/kibana to check that the installation worked as expected.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
-
-_As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
-
+Commads to download ELK yml file, update and intall:
 - touch /etc/ansible/install-elk.yml
 - nano install-elk.yml
-- ---
-- name: Configure Elk VM with Docker
-  hosts: elk
-  become: true
-  tasks:
-    # Use apt module
-    - name: Install docker.io
-      apt:
-        update_cache: yes
-        name: docker.io
-        state: present
+- Configuration of 'install-elk.yml' file:
+  ``` bash
+     - ---
+     - name: Configure Elk VM with Docker
+       hosts: elk
+       become: true
+       tasks:
+         # Use apt module
+         - name: Install docker.io
+           apt:
+             update_cache: yes
+             name: docker.io
+             state: present
 
-      # Use apt module
-    - name: Install python3-pip
-      apt:
-        name: python3-pip
-        state: present
+           # Use apt module
+         - name: Install python3-pip
+           apt:
+             name: python3-pip
+             state: present
 
-      # Use pip module (It will default to pip3)
-    - name: Install Docker module
-      pip:
-        name: docker
-        state: present
+           # Use pip module (It will default to pip3)
+         - name: Install Docker module
+           pip:
+             name: docker
+             state: present
 
-      # Use command module
-    - name: Increase virtual memory
-      command: sysctl -w vm.max_map_count=262144
+           # Use command module
+         - name: Increase virtual memory
+           command: sysctl -w vm.max_map_count=262144
 
-      # Use sysctl module
-    - name: Use more memory
-      sysctl:
-        name: vm.max_map_count
-        value: '262144'
-        state: present
-        reload: yes
+           # Use sysctl module
+         - name: Use more memory
+           sysctl:
+             name: vm.max_map_count
+             value: '262144'
+             state: present
+             reload: yes
 
-      # Use docker_container module
-    - name: download and launch a docker elk container
-      docker_container:
-        name: elk
-        image: sebp/elk:761
-        state: started
-        restart_policy: always
-        # Please list the ports that ELK runs on
-        published_ports:
-         - 5601:5601
-         - 9200:9200
-         - 5044:5044
+           # Use docker_container module
+         - name: download and launch a docker elk container
+           docker_container:
+             name: elk
+             image: sebp/elk:761
+             state: started
+             restart_policy: always
+             # Please list the ports that ELK runs on
+             published_ports:
+              - 5601:5601
+              - 9200:9200
+              - 5044:5044
+'"
  - ansible-playbook /etc/ansible/install-elk.yml
          
